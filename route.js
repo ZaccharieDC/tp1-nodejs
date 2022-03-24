@@ -1,4 +1,5 @@
 const express = require('express')
+const jwt = require('express-jwt')
 const date = require('date-and-time')
 const router = express.Router()
 const userRepository = require('./Repository/UserRepository')
@@ -12,6 +13,12 @@ router.use(function log(req, res, next) {
     next();
     console.log(date.subtract(new Date(), start).toMilliseconds(), 'ms')
 });
+
+router.use(jwt({
+    secret: 'Wong Xi Fang Su Ha',
+    algorithms: ['HS256'],
+    // credentialsRequired: false
+}));
 
 router.use(function(err, req, res, next) {
     console.error(err.stack);
