@@ -1,6 +1,6 @@
 const users = require('../db')
 const md5 = require('md5')
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid')
 
 const getUsers = function() {
     return users
