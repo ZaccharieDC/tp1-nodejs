@@ -12,9 +12,13 @@
 - Route pour créer un "user"
 - Route pour modifier un "user"
 - Route pour supprimer un "user"
+- Les routes créées doivent retourner le bon code HTTP et doivent utiliser le bon verbe HTTP
 
 ### Optional steps
 
-- Encrypter le password de l'utilisateur
-- Logger chaque requête avec: Date, IP de l'appelant, durée de la requête
+- Créez toutes vos routes dans un autre fichier, de façon à sortir cette logique du fichier index.js => Express Doc
+- Encrypter en md5 le password de l'utilisateur
+- Logger chaque requête avec: Date, IP de l'appelant, durée de la requête, verbe + route HTTP
+- Pour la gestion des dates, vous pouvez utiliser la librairie de votre choix disponible sur npm (a condition qu'elle vous semble viable)
+- Pour l'insertion des utilisateurs, et plus particulièrement leur identifiant "id", il faut un uuid et non un entier qui va être auto increment
 - Middleware pour la gestion des erreurs
