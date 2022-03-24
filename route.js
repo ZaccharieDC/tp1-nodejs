@@ -1,11 +1,16 @@
 const express = require('express')
+const date = require('date-and-time')
 const router = express.Router()
 const userRepository = require('./Repository/UserRepository')
 
 // middleware that is specific to this router
-router.use(function timeLog(req, res, next) {
-    console.log('Time: ', Date.now());
+router.use(function log(req, res, next) {
+    start = new Date()
+    console.log(start.toLocaleString());
+    console.log(`${req.method}     ${req.hostname}${req.baseUrl}${req.path}`)
+    console.log(req.ip)
     next();
+    console.log(date.subtract(new Date(), start).toMilliseconds(), 'ms')
 });
 
 router.use(function(err, req, res, next) {
@@ -14,7 +19,7 @@ router.use(function(err, req, res, next) {
 });
 
 router.get('/', (req, res) => {
-    res.send(userRepository.getUsers())
+    res.status(200).send(userRepository.getUsers())
 })
 
 router.post('/', (req, res) => {
@@ -22,8 +27,12 @@ router.post('/', (req, res) => {
     res.status(200).send('User created succesfully')
 })
 
+router.get('/:id', (req, res) => {
+    res.status(200).send(userRepository.getUserById(req.params.id))
+})
+
 router.get('/:firstname', (req, res) => {
-    res.send(userRepository.getUserByFirstname(req.params.firstname))
+    res.status(200).send(userRepository.getUserByFirstname(req.params.firstname))
 })
 
 router.put('/:id', (req, res) => {
