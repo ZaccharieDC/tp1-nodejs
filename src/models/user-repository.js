@@ -5,7 +5,6 @@ const saltRounds = 12
 const { v4: uuidv4 } = require('uuid')
 
 exports.login = function(data) {
-  console.log(data)
   const user = this.getUserByFirstName(data.firstName)
   bcrypt.compare(data.password, user.password, function(err, result) {      
     if (result == false) {
@@ -14,7 +13,7 @@ exports.login = function(data) {
     console.log({
       userId: user.id,
       token: jwt.sign(
-        { userId: user._id },
+        { user: user },
         'Wong Xi Fang Su Ha',
         { expiresIn: '1h' }
       )

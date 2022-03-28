@@ -7,5 +7,5 @@ router.post('/', (req, res) => {
 })
 
 exports.initializeRoutes = () => {
-return router;
+    return router;
 }
