@@ -1,6 +1,21 @@
 const users = require('../db')
-const md5 = require('md5')
+const jwt = require('express-jwt')
+const bcrypt = require('bcrypt')
+const saltRounds = 12
 const { v4: uuidv4 } = require('uuid')
+
+const login = function(data) {
+    const user = this.getUserByFirstname(data.firstname)
+    bcrypt.compare(data.password, user.password, function(err, result) {
+        if (result == false) {
+            return
+        }
+        return jwt({
+            secret: 'Wong Xi Fang Su Ha',
+            algorithms: ['HS256'],
+        })
+    });
+}
 
 const getUsers = function() {
     return users
@@ -16,7 +31,9 @@ const getUserByFirstname = function(firstname) {
 
 const createUser = function(data) {
     data.id = uuidv4()
-    data.password = md5(data.password)
+    bcrypt.hash(data.password, saltRounds, function(err, hash) {
+        data.password = hash
+    })
     users.push(data)
 }
 
@@ -30,6 +47,7 @@ const deleteUser = function(id) {
 }
 
 module.exports = {
+    login,
     getUsers,
     getUserById,
     getUserByFirstname,

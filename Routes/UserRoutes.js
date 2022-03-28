@@ -2,7 +2,7 @@ const express = require('express')
 const jwt = require('express-jwt')
 const date = require('date-and-time')
 const router = express.Router()
-const userRepository = require('./Repository/UserRepository')
+const userRepository = require('../Repository/UserRepository')
 
 // middleware that is specific to this router
 router.use(function log(req, res, next) {
@@ -14,10 +14,14 @@ router.use(function log(req, res, next) {
     console.log(date.subtract(new Date(), start).toMilliseconds(), 'ms')
 });
 
+router.post('/login', (req, res) => {
+    res.send(userRepository.login(req.body))
+})
+
 router.use(jwt({
     secret: 'Wong Xi Fang Su Ha',
     algorithms: ['HS256'],
-    // credentialsRequired: false
+    credentialsRequired: false
 }));
 
 router.use(function(err, req, res, next) {
@@ -25,29 +29,29 @@ router.use(function(err, req, res, next) {
     res.status(500).send('Something broke!');
 });
 
-router.get('/', (req, res) => {
+router.get('/users/', (req, res) => {
     res.status(200).send(userRepository.getUsers())
 })
 
-router.post('/', (req, res) => {
+router.post('/users/', (req, res) => {
     userRepository.createUser(req.body)
     res.status(200).send('User created succesfully')
 })
 
-router.get('/:id', (req, res) => {
+router.get('/users/:id', (req, res) => {
     res.status(200).send(userRepository.getUserById(req.params.id))
 })
 
-router.get('/:firstname', (req, res) => {
+router.get('/users/:firstname', (req, res) => {
     res.status(200).send(userRepository.getUserByFirstname(req.params.firstname))
 })
 
-router.put('/:id', (req, res) => {
+router.put('/users/:id', (req, res) => {
     userRepository.updateUser(req.params.id, req.body)
     res.status(200).send('User succesfully updated')
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/users/:id', (req, res) => {
     userRepository.deleteUser(req.params.id)
     res.status(200).send('User succesfully deleted')
 })
