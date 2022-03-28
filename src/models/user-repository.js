@@ -1,6 +1,26 @@
 const { users } = require('./db');
-const md5 = require('md5');
-const uuid = require('uuid');
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
+const saltRounds = 12
+const { v4: uuidv4 } = require('uuid')
+
+exports.login = function(data) {
+  console.log(data)
+  const user = this.getUserByFirstName(data.firstName)
+  bcrypt.compare(data.password, user.password, function(err, result) {      
+    if (result == false) {
+      return err
+    }
+    console.log({
+      userId: user.id,
+      token: jwt.sign(
+        { userId: user._id },
+        'Wong Xi Fang Su Ha',
+        { expiresIn: '1h' }
+      )
+    })
+  });
+}
 
 exports.getUsers = () => {
   return users;
@@ -17,14 +37,19 @@ exports.getUserByFirstName = (firstName) => {
 };
 
 exports.createUser = (data) => {
-  const user = {
-    id: uuid.v4(),
-    firstName: data.firstName,
-    lastName: data.lastName,
-    password: md5(data.password),
-  };
-
-  users.push(user);
+  bcrypt.hash(data.password, saltRounds, function(err, hash) {
+    data.password = hash
+  })
+  setTimeout(() => {
+    const user = {
+      id: uuidv4(),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      password: data.password,
+    };
+  
+    users.push(user);
+  }, 1000)
 };
 
 exports.updateUser = (id, data) => {
@@ -34,9 +59,15 @@ exports.updateUser = (id, data) => {
     throw new Error('User not found');
   }
 
-  foundUser.firstName = data.firstName || foundUser.firstName;
-  foundUser.lastName = data.lastName || foundUser.lastName;
-  foundUser.password = data.password ? md5(data.password) : foundUser.password;
+  bcrypt.hash(data.password, saltRounds, function(err, hash) {
+    data.password = hash
+  })
+
+  setTimeout(() => {
+    foundUser.firstName = data.firstName || foundUser.firstName;
+    foundUser.lastName = data.lastName || foundUser.lastName;
+    foundUser.password = data.password ? data.password : foundUser.password;
+    }, 1000)
 };
 
 exports.deleteUser = (id) => {

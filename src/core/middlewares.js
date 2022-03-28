@@ -1,10 +1,11 @@
 const express = require('express');
 const { DateTime } = require('luxon');
 const cors = require('cors');
+const jwt = require('express-jwt');
 
 const initJsonHandlerMiddlware = (app) => app.use(express.json());
 
-const initCorsMiddlware = (app) => app.use(cors());
+const initCorsMiddlware = (app) => app.use(cors({ origin: ['http://localhost:63342'] }));
 
 const initLoggerMiddlware = (app) => {
   app.use((req, res, next) => {
@@ -24,6 +25,16 @@ const initLoggerMiddlware = (app) => {
     next();
   });
 };
+
+const initAuthMiddleware = (app) => app.use(jwt({
+  secret: 'Wong Xi Fang Su Ha',
+  algorithms: ['HS256'],
+  credentialsRequired: false
+}));
+
+exports.initializeAuthMiddlwares = (app) => {
+  initAuthMiddleware(app);
+}
 
 exports.initializeConfigMiddlewares = (app) => {
   initJsonHandlerMiddlware(app);

@@ -1,5 +1,6 @@
 const express = require('express');
-const { initializeConfigMiddlewares, initializeErrorMiddlwares } = require('./middlewares');
+const { initializeAuthMiddlwares, initializeConfigMiddlewares, initializeErrorMiddlwares } = require('./middlewares');
+const authRoutes = require('../controllers/auth-routes');
 const userRoutes = require('../controllers/user-routes');
 
 class WebServer {
@@ -10,6 +11,8 @@ class WebServer {
     this.app = express();
 
     initializeConfigMiddlewares(this.app);
+    this._initializeAuthRoute();
+    initializeAuthMiddlwares(this.app)    
     this._initializeRoutes();
     initializeErrorMiddlwares(this.app);
   }
@@ -22,6 +25,10 @@ class WebServer {
 
   _initializeRoutes() {
     this.app.use('/users', userRoutes.initializeRoutes());
+  }
+
+  _initializeAuthRoute() {
+    this.app.use('/login', authRoutes.initializeRoutes());
   }
 }
 
