@@ -29,7 +29,7 @@ const initLoggerMiddlware = (app) => {
 const initAuthMiddleware = (app) => app.use(jwt({
   secret: 'Wong Xi Fang Su Ha',
   algorithms: ['HS256'],
-  credentialsRequired: false
+  // credentialsRequired: false
 }));
 
 exports.initializeAuthMiddlwares = (app) => {
