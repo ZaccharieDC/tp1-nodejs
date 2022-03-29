@@ -1,4 +1,5 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken')
 const router = express.Router();
 const userRepository = require('../models/user-repository');
@@ -17,12 +18,17 @@ router.get('/:firstName', (req, res) => {
   res.send(foundUser);
 });
 
-router.post('/', (req, res) => {
+router.post('/', body('password').isLength({ min: 8 }), (req, res) => {
   let token = req.headers.authorization.split(' ')[1]
   token = jwt.verify(token, process.env.SECRET)
   if(token.user.role != 'ADMIN') {
     res.status(403).end()
     throw new Error('You are not an admin, acces not allowed');
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
   userRepository.createUser(req.body);
