@@ -19,7 +19,7 @@ router.get('/:firstName', (req, res) => {
 
 router.post('/', (req, res) => {
   let token = req.headers.authorization.split(' ')[1]
-  token = jwt.verify(token, 'Wong Xi Fang Su Ha')
+  token = jwt.verify(token, process.env.SECRET)
   if(token.user.role != 'ADMIN') {
     res.status(403).end()
     throw new Error('You are not an admin, acces not allowed');
@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   let token = req.headers.authorization.split(' ')[1]
-  token = jwt.verify(token, 'Wong Xi Fang Su Ha')
+  token = jwt.verify(token, process.env.SECRET)
   if(token.user.role != 'ADMIN') {
     res.status(403).end()
     throw new Error('You are not an admin, acces not allowed');
@@ -43,7 +43,7 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   let token = req.headers.authorization.split(' ')[1]
-  token = jwt.verify(token, 'Wong Xi Fang Su Ha')
+  token = jwt.verify(token, process.env.SECRET)
   if(token.user.role != 'ADMIN') {
     res.status(403).end()
     throw new Error('You are not an admin, acces not allowed');

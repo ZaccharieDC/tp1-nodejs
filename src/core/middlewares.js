@@ -27,7 +27,7 @@ const initLoggerMiddlware = (app) => {
 };
 
 const initAuthMiddleware = (app) => app.use(jwt({
-  secret: 'Wong Xi Fang Su Ha',
+  secret: process.env.SECRET,
   algorithms: ['HS256'],
   // credentialsRequired: false
 }));

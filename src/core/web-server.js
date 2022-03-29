@@ -1,11 +1,13 @@
+const dotenv = require('dotenv');
 const express = require('express');
 const { initializeAuthMiddlwares, initializeConfigMiddlewares, initializeErrorMiddlwares } = require('./middlewares');
 const authRoutes = require('../controllers/auth-routes');
 const userRoutes = require('../controllers/user-routes');
+dotenv.config();
 
 class WebServer {
   app = undefined;
-  port = 3000;
+  port = process.env.PORT;
 
   constructor() {
     this.app = express();

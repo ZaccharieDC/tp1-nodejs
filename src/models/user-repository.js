@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 12
 const { v4: uuidv4 } = require('uuid')
+const dotenv = require('dotenv');
+dotenv.config();
 
 exports.login = function(data) {
   const user = this.getUserByFirstName(data.firstName)
@@ -14,8 +16,8 @@ exports.login = function(data) {
       userId: user.id,
       token: jwt.sign(
         { user: user },
-        'Wong Xi Fang Su Ha',
-        { expiresIn: '1h' }
+        process.env.SECRET,
+        { expiresIn: process.env.EXPIRATION }
       )
     })
   });
@@ -36,9 +38,16 @@ exports.getUserByFirstName = (firstName) => {
 };
 
 exports.createUser = (data) => {
+  const foundUser = users.find((user) => user.firstName == data.firstName);
+
+  if(foundUser) {
+    throw new Error('This name already exist');
+  }
+
   bcrypt.hash(data.password, saltRounds, function(err, hash) {
     data.password = hash
   })
+
   setTimeout(() => {
     const user = {
       id: uuidv4(),
