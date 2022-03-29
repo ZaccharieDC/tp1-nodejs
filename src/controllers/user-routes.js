@@ -18,7 +18,12 @@ router.get('/:firstName', (req, res) => {
   res.send(foundUser);
 });
 
-router.post('/', body('password').isLength({ min: 8 }), (req, res) => {
+router.post('/', 
+  body('firstName').not().isEmpty(),
+  body('lastName').not().isEmpty(),
+  body('role').not().isEmpty(),
+  body('password').isLength({ min: 8 }), 
+  (req, res) => {
   let token = req.headers.authorization.split(' ')[1]
   token = jwt.verify(token, process.env.SECRET)
   if(token.user.role != 'ADMIN') {
