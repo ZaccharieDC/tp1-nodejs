@@ -37,7 +37,7 @@ router.post('/',
   }
 
   userRepository.createUser(req.body);
-  res.status(201).end();
+  res.status(200).end();
 });
 
 router.put('/:id', (req, res) => {

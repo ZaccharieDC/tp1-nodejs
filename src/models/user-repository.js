@@ -1,27 +1,9 @@
 const { users } = require('./db');
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 12
 const { v4: uuidv4 } = require('uuid')
 const dotenv = require('dotenv');
 dotenv.config();
-
-exports.login = function(data) {
-  const user = this.getUserByFirstName(data.firstName)
-  bcrypt.compare(data.password, user.password, function(err, result) {      
-    if (result == false) {
-      return err
-    }
-    console.log({
-      userId: user.id,
-      token: jwt.sign(
-        { user: user },
-        process.env.SECRET,
-        { expiresIn: process.env.EXPIRATION }
-      )
-    })
-  });
-}
 
 exports.getUsers = () => {
   return users;
